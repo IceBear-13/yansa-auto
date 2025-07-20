@@ -9,4 +9,5 @@ export const users = pgTable("users", {
     updatedAt: date("updated_at").notNull().defaultNow(),
     role: varchar("role", { length: 10 }).notNull().default('user'),
     totalPurchases: integer("total_purchases").notNull().default(0),
+    phoneNumber: varchar("phone_number", { length: 15 }).notNull().default('')
 })
