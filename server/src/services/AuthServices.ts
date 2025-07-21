@@ -93,7 +93,7 @@ export class AuthServices {
                 username: username,
                 email: email,
                 passwordHash: await this.hashPassword(password),
-                role: 'user',
+                role: 'admin',
                 totalPurchases: 0,
                 phoneNumber: phoneNumber
             })
@@ -113,3 +113,4 @@ export class AuthServices {
 }
 
 export const authServices = new AuthServices();
+
