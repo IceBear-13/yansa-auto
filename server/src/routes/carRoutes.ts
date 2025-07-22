@@ -5,7 +5,7 @@ import { authMiddleware } from "../middleware/authMiddleware";
 
 export const carRouter = Router();
 
-const upload = multer({ dest: 'car-images/' });
+const upload = multer({ dest: 'data/car-images/' });
 
 carRouter.get('/all', carControllerInstance.getCars.bind(carControllerInstance));
 carRouter.get('/model/:model', carControllerInstance.getCarsByModel.bind(carControllerInstance));
