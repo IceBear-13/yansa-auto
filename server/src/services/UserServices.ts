@@ -8,8 +8,18 @@ export class UserServices {
         return userOperations.getUserById(id);
     }
 
-    async deleteUser(id: string): Promise<void> {
-        return userOperations.deleteUser(id);
+    async deleteUser(id: string): Promise<User | null> {
+        try {
+            const user = await this.getUserById(id);
+            if (!user) {
+                return null;
+            }
+            await userOperations.deleteUser(id);
+            return user;
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            return null;
+        }
     }
 
     async getUserByUsername(username: string): Promise<User | null> {
@@ -48,13 +58,26 @@ export class UserServices {
         return userOperations.updatePhoneNumber(user.id, newPhoneNumber);
     }
 
-    async changePassword(email: string, newPassword: string): Promise<User | null> {
+    async changePassword(email: string, oldPassword: string,newPassword: string): Promise<User | null> {
         const user = await this.getUserByEmail(email);
         if (!user) {
             throw new Error("User not found");
         }
-        const hashedPassword = await authServices.hashPassword(newPassword);
-        return userOperations.changePassword(user.id, hashedPassword);
+        try{
+            const isPasswordValid = await authServices.comparePassword(oldPassword, user.passwordHash);
+            if (!isPasswordValid) {
+                console.error("Invalid password attempt for user:", email);
+                return null;
+            }
+            const hashedPassword = await authServices.hashPassword(newPassword);
+            return userOperations.changePassword(user.id, hashedPassword);
+        } catch (error) {
+            console.error("Error changing password:", error);
+            return null;
+        }
+
     }
     
 }
+
+export const userServices = new UserServices();

@@ -12,3 +12,5 @@ export class TransactionService {
         return transaction;
     }
 }
+
+export const transactionService = new TransactionService();
