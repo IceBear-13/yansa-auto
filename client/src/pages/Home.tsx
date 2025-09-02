@@ -1,7 +1,39 @@
+// ...existing code...
+import React, { useEffect, useState } from "react";
 import MainLayout from "../layout/MainLayout";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
 
 const Home = () => {
+    const [query, setQuery] = useState("");
+    const [cars, setCars] = useState<any[]>([]);
+
+    useEffect(() => {
+        // Only run in browser environment
+        try {
+            const raw = typeof window !== "undefined" ? localStorage.getItem("cars") : null;
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                setCars(Array.isArray(parsed) ? parsed : []);
+            }
+        } catch (err) {
+            // If parsing fails, keep cars as empty array
+            setCars([]);
+            // Optionally log: console.error("Failed to parse cars from localStorage", err);
+        }
+    }, []);
+
+    const displayedCars = query
+        ? cars.filter((car) => {
+              const q = query.toLowerCase();
+              return (
+                  String(car.make || "").toLowerCase().includes(q) ||
+                  String(car.model || "").toLowerCase().includes(q) ||
+                  String(car.title || "").toLowerCase().includes(q) ||
+                  String(car.description || "").toLowerCase().includes(q)
+              );
+          })
+        : cars;
+
     return (
         <MainLayout>
             <section
@@ -35,9 +67,16 @@ const Home = () => {
                             <input
                                 className="form-input w-full rounded-full border-transparent bg-white/90 py-4 pl-12 pr-32 text-base text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-blue-500"
                                 placeholder="Search by make, model, or keyword"
-                                value=""
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                aria-label="Search vehicles"
                             />
-                            <button className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-blue-600 px-6 py-2.5 text-white font-semibold shadow-md transition-colors hover:bg-blue-700">
+                            <button
+                                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-blue-600 px-6 py-2.5 text-white font-semibold shadow-md transition-colors hover:bg-blue-700"
+                                onClick={() => {
+                                    /* optional: trigger search action; currently filtering is live */
+                                }}
+                            >
                                 Search
                             </button>
                         </div>
@@ -48,26 +87,17 @@ const Home = () => {
                 <div className="container mx-auto px-4">
                     <h2 className="text-center text-4xl font-bold tracking-tight text-gray-900">Featured Vehicles</h2>
                     <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        <FeaturedVehicles
-                            image="https://images-porsche.imgix.net/-/media/F9D62E45B045496DBC909B1A362B9DA1_4A3B5B18AE2F4CA799D84EF8EBBFCC30_CZ23V20OX0009-911-gt3-rs-driving-side?w=1759&q=85&auto=format"
-                            title="2021 Porsche 911 GT3 RS"
-                            description="Experience the thrill of the track with the 2021 Porsche 911 GT3 RS."
-                            price="$200,000"
-                        />
-                        <FeaturedVehicles
-                            image="https://hips.hearstapps.com/hmg-prod/images/2024-ferrari-sf90-xx-stradale-109-654a668fc71a3.jpg?crop=0.582xw:0.490xh;0.204xw,0.373xh&resize=1200:*"
-                            title="2024 Ferrari SF90 XX Stradale"
-                            description="Unleash the power of hybrid performance with the 2024 Ferrari SF90 XX Stradale."
-                            price="$500,000"
-                        />
-                        <FeaturedVehicles
-                            image="https://www.stratstone.com/-/media/stratstone/spotlight/porsche-918-spyder/2021-update/porsche-918-spyder-rear-race-1280x720px.ashx"
-                            title="2015 Porsche 918 Spyder"
-                            description="Experience the pinnacle of hybrid performance with the 2021 Porsche 918 Spyder."
-                            price="$1,000,000"
-                        />
+                        {displayedCars.map((car: any) => (
+                            <FeaturedVehicles
+                                key={car.id}
+                                image={car.image}
+                                title={car.title}
+                                description={car.description}
+                                price={car.price}
+                                car={{ make: car.make, model: car.model, year: car.year, id: car.id }}
+                            />
+                        ))}
                     </div>
-
                 </div>
             </section>
         </MainLayout>
@@ -75,3 +105,4 @@ const Home = () => {
 };
 
 export default Home;
+// ...existing

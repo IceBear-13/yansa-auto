@@ -10,21 +10,21 @@ const Header = ({ onToggle, curPage }: { onToggle?: () => void, curPage: string 
   ];
   
   return (
-    <header className="p-4 justify-between items-center overflow-y-scroll flex ">
+    <header className="p-4 justify-between overflow-y-scroll flex ">
       <div>
         <button
           onClick={onToggle}
           className="lg:hidden block p-2 rounded-md hover:bg-gray-200 transition-colors size-10"
           aria-label="Toggle sidebar"
         >
-            <img src="/burger-menu-svgrepo-com.svg" alt="Menu" />
+            <img src="/burger-menu-svgrepo-com.svg" alt="Menu" className="hover:rotate-180 transition-transform duration-300"/>
         </button>
       </div>
       <div className="lg:hidden block">
         <h1 className="text-base font-medium">Yansa Auto</h1>
       </div>
-      <nav className="hidden gap-15 justify-between lg:flex lg:items-center lg:justify-center">
-        <div className="flex gap-2 justify-center items-center">
+      <nav className="hidden gap-15 lg:flex lg:items-center lg:justify-start lg:flex-1">
+        <div className="flex gap-2 items-center">
             <img src="/446219677_433806359508565_6937796297832185769_n-removebg-preview.png" alt="" className="h-8 w-8 object-cover" />
             <h1 className="text-base font-medium">Yansa Auto</h1>
         </div>

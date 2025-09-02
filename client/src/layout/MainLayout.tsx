@@ -1,4 +1,4 @@
-
+// ...existing code...
 import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -25,9 +25,16 @@ function MainLayout({ children }: { children: React.ReactNode }) {
                 logo={logo}
             />
 
+            <div
+                role="button"
+                aria-hidden={!isSidebarOpen}
+                onClick={() => setSidebarOpen(false)}
+                className={`fixed inset-0 bg-black transition-opacity duration-300 z-10 ${isSidebarOpen ? 'opacity-50 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+            />
+
             <Header onToggle={() => setSidebarOpen(v => !v)} curPage={window.location.pathname}/>
 
-            <main className="flex-grow">
+            <main className="flex-grow bg-gray-50">
                 {children}
             </main>
             <Footer />
@@ -36,3 +43,4 @@ function MainLayout({ children }: { children: React.ReactNode }) {
 }
 
 export default MainLayout;
+// ...existing code...

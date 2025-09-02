@@ -4,6 +4,7 @@ import About from "../pages/About";
 import Cars from "../pages/Cars";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
+import CarDetails from "../pages/CarDetails";
 
 
 const router = createBrowserRouter(
@@ -25,8 +26,8 @@ const router = createBrowserRouter(
             element: <div>FAQ</div>
         },
         {
-            path: "/car/:id",
-            element: <div>Car Details</div>
+            path: "/cars/:id",
+            element: <CarDetails />
         },
         {
             path: "/contact",
