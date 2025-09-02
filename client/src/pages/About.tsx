@@ -13,7 +13,8 @@ function About() {
         >
           <div className="absolute inset-0 flex items-center justify-center">
             <h1 className="text-white text-5xl font-bold tracking-wider">
-              About AutoVerse
+              About <br className="lg:hidden"/> 
+              Yansa Auto
             </h1>
           </div>
         </div>
@@ -85,7 +86,6 @@ function About() {
               </div>
             </div>
           </section>
-
         </div>
       </div>
     </MainLayout>
