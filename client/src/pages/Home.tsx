@@ -1,26 +1,26 @@
-// ...existing code...
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import MainLayout from "../layout/MainLayout";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
+import { fetchFeaturedCars } from "../api/carApi";
 
 const Home = () => {
     const [query, setQuery] = useState("");
     const [cars, setCars] = useState<any[]>([]);
 
     useEffect(() => {
-        // Only run in browser environment
-        try {
-            const raw = typeof window !== "undefined" ? localStorage.getItem("cars") : null;
-            if (raw) {
-                const parsed = JSON.parse(raw);
-                setCars(Array.isArray(parsed) ? parsed : []);
-            }
-        } catch (err) {
-            // If parsing fails, keep cars as empty array
-            setCars([]);
-            // Optionally log: console.error("Failed to parse cars from localStorage", err);
-        }
+        const fetchData = async () => {
+            const cars = await fetchFeaturedCars();
+            setCars(cars);
+        };
+        fetchData();
     }, []);
+
+    const formatPrice = (price: number) => {
+        return new Intl.NumberFormat("en-ID", {
+            style: "currency",
+            currency: "IDR",
+        }).format(price);
+    };
 
     const displayedCars = query
         ? cars.filter((car) => {
@@ -91,9 +91,9 @@ const Home = () => {
                             <FeaturedVehicles
                                 key={car.id}
                                 image={car.image}
-                                title={car.title}
+                                title={car.model}
                                 description={car.description}
-                                price={car.price}
+                                price={formatPrice(car.price)}
                                 car={{ make: car.make, model: car.model, year: car.year, id: car.id }}
                             />
                         ))}
@@ -105,4 +105,3 @@ const Home = () => {
 };
 
 export default Home;
-// ...existing

@@ -1,14 +1,11 @@
+import type { Car } from "../../models/car";
+
 interface FeaturedVehiclesProps {
     image: string;
     title: string;
     description: string;
     price: string;
-    car: {
-        make: string,
-        model: string,
-        year: number,
-        id: string
-    };
+    car: Car;
 }
 
 const FeaturedVehicles = ({ image, title, description, price, car }: FeaturedVehiclesProps) => {

@@ -5,6 +5,9 @@ import Cars from "../pages/Cars";
 import Contact from "../pages/Contact";
 import Services from "../pages/Services";
 import CarDetails from "../pages/CarDetails";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Admin from "../pages/Admin";
 
 
 const router = createBrowserRouter(
@@ -43,15 +46,15 @@ const router = createBrowserRouter(
         },
         {
             path: "/login",
-            element: <div>Login</div>
+            element: <Login />
         },
         {
             path: "/register",
-            element: <div>Register</div>
+            element: <Register />
         },
         {
             path: "/admin",
-            element: <div>Admin</div>
+            element: <Admin />
         },
         {
             path: "/account",

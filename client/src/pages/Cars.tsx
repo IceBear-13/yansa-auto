@@ -1,35 +1,28 @@
 import { fetchAllCars } from "../api/carApi";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
 import MainLayout from "../layout/MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Cars() {
 
-
+  const [showedCars, setShowedCars] = useState<any[]>(JSON.parse(localStorage.getItem("cars") || "[]"));
+  
   onload = async () => {
     if(!localStorage.getItem("cars")){
       const cars = await fetchAllCars();
+      setShowedCars(cars);
       localStorage.setItem("cars", JSON.stringify(cars));
     }
   }
 
-  const [showedCars, setShowedCars] = useState<any[]>(JSON.parse(localStorage.getItem("cars") || "[]"));
-
-
-  const searchCars = (query: string) => {
-    const cars = JSON.parse(localStorage.getItem("cars") || "[]");
-    return cars.filter((car: any) =>
-      car.make.toLowerCase().includes(query.toLowerCase()) ||
-      car.model.toLowerCase().includes(query.toLowerCase()) ||
-      car.year.toString().includes(query)
-    );
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(price);
   };
 
-  const handleSearch = (query: string) => {
-    const results = searchCars(query);
-    setShowedCars(results);
-  };
-
+  
   return (
     <MainLayout>
       <section>
@@ -153,9 +146,9 @@ function Cars() {
           <FeaturedVehicles
             key={car.id}
             image={car.image}
-            title={car.title}
+            title={car.model}
             description={car.description}
-            price={car.price}
+            price={formatPrice(car.price)}
             car={{
               make: car.make,
               model: car.model,

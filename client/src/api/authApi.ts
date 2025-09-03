@@ -4,35 +4,35 @@ const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000'
 
 export const login = async (usernameOrEmail:string, password: string) => {
     const user = await axios.post(
-        `${API_URL}/api/auth/login`, {
-            data: {
-                usernameOrEmail,
-                password
-            }
-    })
+        `${API_URL}/api/auth/login`, 
+        {
+            usernameOrEmail,
+            password
+        }
+    )
 
     return user.data;
 }
 
 export const register = async (username: string, email: string, password: string, phoneNumber: string) => {
     const user = await axios.post(
-        `${API_URL}/api/auth/register`, {
-            data: {
-                username,
-                email,
-                password,
-                phoneNumber
-            }
-    })
+        `${API_URL}/api/auth/register`, 
+        {
+            username: username,
+            email: email,
+            password: password,
+            phoneNumber: phoneNumber
+        }
+    )
 
     return user.data;
 }
 
 export const authenticate = async (token: string) => {
-    const user = await axios.post(
+    const user = await axios.get(
         `${API_URL}/api/auth/authenticate`, {
-            data: {
-                token
+            headers: {
+                Authorization: `Bearer ${token}`
             }
     })
 
