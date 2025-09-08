@@ -1,19 +1,41 @@
 import { fetchAllCars } from "../api/carApi";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
 import MainLayout from "../layout/MainLayout";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 function Cars() {
 
   const [showedCars, setShowedCars] = useState<any[]>(JSON.parse(localStorage.getItem("cars") || "[]"));
   
-  onload = async () => {
-    if(!localStorage.getItem("cars")){
-      const cars = await fetchAllCars();
-      setShowedCars(cars);
-      localStorage.setItem("cars", JSON.stringify(cars));
-    }
-  }
+
+  const sortByPriceAsc = () => {
+    const sortedCars = [...showedCars].sort((a, b) => a.price - b.price);
+    setShowedCars(sortedCars);
+  };
+
+  const sortByPriceDesc = () => {
+    const sortedCars = [...showedCars].sort((a, b) => b.price - a.price);
+    setShowedCars(sortedCars);
+  };
+
+  const sortByYearDesc = () => {
+    const sortedCars = [...showedCars].sort((a, b) => b.year - a.year);
+    setShowedCars(sortedCars);
+  };
+  
+  useEffect(() => {
+    const loadCars = async () => {
+      if(!localStorage.getItem("cars")){
+        const cars = await fetchAllCars();
+        localStorage.setItem("cars", JSON.stringify(cars));
+        setShowedCars(cars);
+      }
+      const storedCars = JSON.parse(localStorage.getItem("cars") || "[]");
+      const sortedCars = [...storedCars].sort((a, b) => a.price - b.price);
+      setShowedCars(sortedCars);
+    };
+    loadCars();
+  }, []);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-ID", {
@@ -22,7 +44,29 @@ function Cars() {
     }).format(price);
   };
 
-  
+  const handleSearch = () => {
+    const make = (document.getElementById("make") as HTMLInputElement).value.toLowerCase() || "";
+    const model = (document.getElementById("model") as HTMLInputElement).value.toLowerCase() || "";
+    const priceFrom = parseInt((document.getElementById("price-from") as HTMLInputElement).value) || 0;
+    const priceTo = parseInt((document.getElementById("price-to") as HTMLInputElement).value) || Infinity;
+    const yearFrom = parseInt((document.getElementById("year-from") as HTMLInputElement).value) || 1900;
+    const yearTo = parseInt((document.getElementById("year-to") as HTMLInputElement).value) || new Date().getFullYear();
+
+    console.log(make, model, priceFrom, priceTo, yearFrom, yearTo);
+
+    const filteredCars = JSON.parse(localStorage.getItem("cars") || "[]").filter((car: any) => {
+      return (
+        car.manufacturer.toLowerCase().includes(make) &&
+        car.model.toLowerCase().includes(model) &&
+        car.price >= priceFrom &&
+        car.price <= priceTo &&
+        car.year >= yearFrom &&
+        car.year <= yearTo
+      );
+    });
+    setShowedCars(filteredCars);
+  }
+
   return (
     <MainLayout>
       <section>
@@ -36,7 +80,7 @@ function Cars() {
             </p>
           </div>
           <div className="mb-8 rounded-lg bg-white p-6 shadow-sm">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2 lg:grid-cols-4">
               <div>
                 <label
                   className="block text-sm font-medium text-gray-700"
@@ -117,6 +161,7 @@ function Cars() {
                   />
                 </div>
               </div>
+              <button type="submit" className="mt-4 w-full rounded-md py-2 bg-blue-600 text-white transition duration-300 hover:bg-blue-700" onClick={handleSearch}>Search</button>
             </div>
           </div>
           <div className="mb-4 flex items-center justify-between">
@@ -132,10 +177,16 @@ function Cars() {
                 className="rounded-md border-gray-300 text-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)]"
                 id="sort-by"
                 name="sort-by"
+                defaultValue="price-asc"
+                onChange={(e) => {
+                  if(e.target.value === "price-asc") sortByPriceAsc();
+                  else if(e.target.value === "price-desc") sortByPriceDesc();
+                  else if(e.target.value === "year-desc") sortByYearDesc();
+                }}
               >
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Year: Newest First</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="year-desc">Year: Newest First</option>
               </select>
             </div>
           </div>

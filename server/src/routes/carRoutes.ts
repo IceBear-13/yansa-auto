@@ -14,4 +14,8 @@ carRouter.get('/manufacturer/model', carControllerInstance.getCarsByManufacturer
 carRouter.get('/mileage-range', carControllerInstance.getCarsByMileageRange.bind(carControllerInstance));
 carRouter.get('/model/:model/year/:year', carControllerInstance.getCarByModelAndYear.bind(carControllerInstance));
 carRouter.get('/mileage/:mileage', carControllerInstance.getCarsByMileageRange.bind(carControllerInstance));
+carRouter.post('/features', carControllerInstance.getCarByFeatures.bind(carControllerInstance));
 carRouter.post('/create', authMiddleware, upload.single('images'), carControllerInstance.createCar.bind(carControllerInstance));
+carRouter.get('/featured', carControllerInstance.getFeaturedCars.bind(carControllerInstance));
+carRouter.get('/registration/:registrationNumber', carControllerInstance.getCarByRegistrationNumber.bind(carControllerInstance));
+// carRouter.put('/update/:registrationNumber', authMiddleware, carControllerInstance.updateCar.bind(carControllerInstance));

@@ -7,14 +7,16 @@ import { authenticate, login } from "../api/authApi";
 
 export default function Login() {
   const [isVerified, setIsVerified] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState(true);
   const [wrongCredentials, setWrongCredentials] = useState(false);
 
 useEffect(() => {
     const checkAuth = async () => {
+        setIsLoading(true);
         const token = localStorage.getItem("token");
         const user = await authenticate(token || "");
         setIsVerified(!!user);
+        setIsLoading(false);
     };
     checkAuth();
 }, []);
@@ -26,14 +28,21 @@ useEffect(() => {
     const token = await login(username, password);
     if (token) {
       localStorage.setItem("token", token.token);
+    } else{
+      setWrongCredentials(true);
+      return;
     }
-    setWrongCredentials(true);
+    window.location.reload();
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if(e.key === 'Enter'){
       handleSignin();
     }
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return !isVerified ? (

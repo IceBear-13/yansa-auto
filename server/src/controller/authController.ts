@@ -11,6 +11,7 @@ export class AuthController {
         }
         try {
             const token = await authServices.login(usernameOrEmail, password);
+            res.cookie("token", token, { httpOnly: true });
             res.status(200).json(token);
             return;
         } catch (error) {
@@ -46,7 +47,7 @@ export class AuthController {
             return;
         }
 
-        try {
+        try{
             const user = await authServices.authenticateToken(token);
             if (!user) {
                 res.status(401).json({ message: "Invalid token" });
@@ -54,10 +55,13 @@ export class AuthController {
             }
             req.user = user;
             res.status(200).json(user);
+
         } catch (error) {
             console.error("Authentication error:", error);
-            res.status(500).json({ message: "Internal server error" });
+            res.status(500).json({ message: error });
         }
+
+
     }
     
 }

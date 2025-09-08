@@ -1,4 +1,4 @@
-import { integer, pgTable, varchar, date, uuid, pgEnum } from "drizzle-orm/pg-core";
+import { integer, pgTable, varchar, date, pgEnum, boolean } from "drizzle-orm/pg-core";
 
 export const transmissionEnum = pgEnum("transmission", ["manual", "automatic"]);
 
@@ -15,4 +15,5 @@ export const cars = pgTable("cars", {
     createdAt: date("created_at").notNull().defaultNow(),
     updatedAt: date("updated_at").notNull().defaultNow(),
     transmission: transmissionEnum("transmission").notNull(),
+    featured: boolean("featured").notNull().default(false)
 });

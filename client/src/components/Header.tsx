@@ -6,11 +6,10 @@ const Header = ({ onToggle, curPage }: { onToggle?: () => void, curPage: string 
     { name: "About", href: "/about" },
     { name: "Cars", href: "/cars" },
     { name: "Contact", href: "/contact" },
-    { name: "Services", href: "/services" },
   ];
   
   return (
-    <header className="p-4 justify-between overflow-y-scroll flex ">
+  <header className="p-4 justify-between overflow-y-scroll flex items-center">
       <div>
         <button
           onClick={onToggle}

@@ -3,7 +3,6 @@ import Home from "../pages/Home";
 import About from "../pages/About";
 import Cars from "../pages/Cars";
 import Contact from "../pages/Contact";
-import Services from "../pages/Services";
 import CarDetails from "../pages/CarDetails";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -35,10 +34,6 @@ const router = createBrowserRouter(
         {
             path: "/contact",
             element: <Contact />
-        },
-        {
-            path: "/services",
-            element: <Services />
         },
         {
             path: "/services/:service-type",

@@ -11,6 +11,7 @@ export class carController {
             res.status(200).json(cars);
         } catch (error) {
             res.status(500).json({ message: 'Error retrieving cars', error });
+            console.error(error)
         }
     }
 
@@ -92,7 +93,50 @@ export class carController {
             res.status(500).json({ message: 'Error creating car', error });
         }
     }
-    
-}
 
+    async getCarByRegistrationNumber(req: AuthRequest, res: Response) {
+        const registrationNumber = req.params.registrationNumber;
+
+        try {
+            const car = await carsService.getCarByRegistrationNumber(registrationNumber);
+            if (car) {
+                res.status(200).json(car);
+            } else {
+                res.status(404).json({ message: 'Car not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Error retrieving car by registration number', error });
+        }
+    }
+
+    async getCarByFeatures(req: AuthRequest, res: Response) {
+        const manufacturer = req.query.manufacturer as string | null;
+        const model = req.query.model as string | null;
+        const fromYear = req.query.fromYear ? parseInt(req.query.fromYear as string, 10) : null;
+        const toYear = req.query.toYear ? parseInt(req.query.toYear as string, 10) : null;
+        const fromPrice = req.query.fromPrice ? parseFloat(req.query.fromPrice as string) : null;
+        const toPrice = req.query.toPrice ? parseFloat(req.query.toPrice as string) : null;
+
+        try{
+            const cars = await carsService.getCarByFeatures(manufacturer, model, fromYear, toYear, fromPrice, toPrice)
+            if(cars) {
+                res.status(200).json(cars);
+            } else {
+                res.status(404).json({message: cars});
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    async getFeaturedCars(req: AuthRequest, res: Response) {
+        try {
+            const cars = await carsService.getFeaturedCars();
+            res.status(200).json(cars);
+        } catch (error) {
+            res.status(500).json({ message: 'Error retrieving featured cars', error });
+        }
+    }
+}
 export const carControllerInstance = new carController();

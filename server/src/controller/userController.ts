@@ -1,11 +1,10 @@
 import { userServices } from "../services/UserServices";
 import { AuthRequest } from "../models/requests/AuthRequest";
 import { Response } from "express";
-import { deleteUser } from "../db/operations/user-operations";
 
 export class UserController {
     async getUserById(req: AuthRequest, res: Response) {
-        if (!req.user || req.user.role !== 'admin') {
+        if (req.user!.role !== 'admin') {
             return res.status(403).json({ message: "Forbidden: Admin role required" });
         }
 

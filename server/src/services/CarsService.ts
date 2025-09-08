@@ -3,7 +3,7 @@ import { Car } from "../models/cars";
 import { uploadCarImage } from "../storage/storage-operations";
 
 export class CarsService {
-    async getAllCars(): Promise<Car[]> {
+    async getAllCars(): Promise<Partial<Car>[]> {
         try{
             return await cars.getAllCars();
         } catch (error) {
@@ -11,7 +11,7 @@ export class CarsService {
         }
     }
 
-    async getCarsByModel(model: string): Promise<Car[]> {
+    async getCarsByModel(model: string): Promise<Partial<Car>[]> {
         try {
             return await cars.getCarByModel(model);
         } catch (error) {
@@ -19,15 +19,24 @@ export class CarsService {
         }
     }
 
-    async getCarsByManufacturer(manufacturer: string): Promise<Car[]> {
+    async getCarsByManufacturer(manufacturer: string): Promise<Partial<Car>[]> {
         try {
             return await cars.getCarByManufacturer(manufacturer);
         } catch (error) {
             throw new Error(`Failed to get cars by manufacturer: ${error}`);
         }
     }
-    
-    async getCarsByManufacturerAndModel(manufacturer: string, model: string): Promise<Car[]> {
+
+    async getFeaturedCars(): Promise<Partial<Car>[]> {
+        try {
+            return await cars.getFeaturedCars();
+        } catch (error) {
+            console.error(error);
+            throw new Error(`Failed to get featured cars: ${error}`);
+        }
+    }
+
+    async getCarsByManufacturerAndModel(manufacturer: string, model: string): Promise<Partial<Car>[]> {
         try {
             return await cars.getCarByManufacturerAndModel(manufacturer, model);
         } catch (error) {
@@ -35,7 +44,7 @@ export class CarsService {
         }
     }
 
-    async getCarsByMileageRange(minMileage: number, maxMileage: number): Promise<Car[]> {
+    async getCarsByMileageRange(minMileage: number, maxMileage: number): Promise<Partial<Car>[]> {
         try {
             return await cars.getCarsByMileageRange(minMileage, maxMileage);
         } catch (error) {
@@ -43,7 +52,7 @@ export class CarsService {
         }
     }
 
-    async getCarByModelAndYear(model: string, year: number): Promise<Car[]> {
+    async getCarByModelAndYear(model: string, year: number): Promise<Partial<Car>[]> {
         try {
             return await cars.getCarByModelAndYear(model, year);
         } catch (error) {
@@ -51,7 +60,7 @@ export class CarsService {
         }
     }
 
-    async getCarByMileage(mileage: number): Promise<Car[]> {
+    async getCarByMileage(mileage: number): Promise<Partial<Car>[]> {
         try {
             return await cars.getCarByMileage(mileage);
         } catch (error) {
@@ -59,7 +68,7 @@ export class CarsService {
         }
     }
 
-    async getCarByRegistrationNumber(registrationNumber: string): Promise<Car | null> {
+    async getCarByRegistrationNumber(registrationNumber: string): Promise<Partial<Car> | null> {
         try {
             return await cars.getCarByRegistrationNumber(registrationNumber);
         } catch (error) {
@@ -67,7 +76,7 @@ export class CarsService {
         }
     }
 
-    async createCar(car: Car, image: Express.Multer.File): Promise<Car> {
+    async createCar(car: Car, image: Express.Multer.File): Promise<Partial<Car>> {
         try{
             await uploadCarImage(image, car.registrationNumber);
             return await cars.createCar(car);
@@ -75,6 +84,31 @@ export class CarsService {
             throw new Error(`Failed to create car: ${error}`);
         }
     }
+
+    async getCarByFeatures(manufacturer: string | null, model: string | null, fromYear: number | null, toYear: number | null, minPrice: number | null, maxPrice: number | null): Promise<Partial<Car>[]> {
+        try {
+            return await cars.getCarByFeatures(manufacturer, model, fromYear, toYear, minPrice, maxPrice);
+        } catch (error) {
+            throw new Error(`Failed to get car by features: ${error}`);
+        }
+    }
+
+    async deleteCar(registrationNumber: string): Promise<Partial<Car> | null> {
+        try {
+            return await cars.deleteCar(registrationNumber);
+        } catch (error) {
+            throw new Error(`Failed to delete car: ${error}`);
+        }
+    }
+
+    async updateCar(registrationNumber: string, updatedFields: Partial<Car>): Promise<Partial<Car> | null> {
+        try {
+            return await cars.updateCar(registrationNumber, updatedFields);
+        } catch (error) {
+            throw new Error(`Failed to update car: ${error}`);
+        }
+    }
+
 }
 
 export const carsService = new CarsService();

@@ -20,7 +20,9 @@ WORKDIR /app
 
 # Copy package files and install production dependencies
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ciq
+
+COPY .env .env
 
 # Copy built application from build stage
 COPY --from=build /app/dist ./dist

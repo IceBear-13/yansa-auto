@@ -5,14 +5,20 @@ import { fetchFeaturedCars } from "../api/carApi";
 
 const Home = () => {
     const [query, setQuery] = useState("");
-    const [cars, setCars] = useState<any[]>([]);
+    const [cars, setCars] = useState<any[]>(JSON.parse(localStorage.getItem("featuredCars") || "[]"));
 
     useEffect(() => {
+
         const fetchData = async () => {
             const cars = await fetchFeaturedCars();
             setCars(cars);
+            localStorage.setItem("featuredCars", JSON.stringify(cars));
         };
-        fetchData();
+
+        if(!localStorage.getItem("featuredCars")){
+            fetchData();
+        }
+        
     }, []);
 
     const formatPrice = (price: number) => {
@@ -40,7 +46,7 @@ const Home = () => {
                 className="relative flex min-h-[60vh] items-center justify-center bg-cover bg-center py-20 text-white"
                 style={{
                     backgroundImage:
-                        'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("https://images-porsche.imgix.net/-/media/F9D62E45B045496DBC909B1A362B9DA1_4A3B5B18AE2F4CA799D84EF8EBBFCC30_CZ23V20OX0009-911-gt3-rs-driving-side?w=1759&q=85&auto=format")'
+                        'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url("https://images.hgmsites.net/lrg/2015-mercedes-benz-c-class_100474443_l.jpg")'
                 }}
             >
                 <div className="container mx-auto px-4 text-center">

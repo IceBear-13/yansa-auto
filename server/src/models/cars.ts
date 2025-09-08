@@ -11,4 +11,5 @@ export interface Car {
     transmission: 'manual' | 'automatic';
     createdAt: Date;
     updatedAt: Date;
+    featured: boolean;
 }

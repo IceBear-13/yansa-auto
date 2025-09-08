@@ -30,7 +30,7 @@ export class AuthServices {
             const decoded = jwt.verify(token, this.jwtSecret);
             return decoded as User | null;
         } catch (error) {
-            throw new Error("Invalid token");
+            return null;
         }
     }
 
@@ -93,7 +93,7 @@ export class AuthServices {
                 username: username,
                 email: email,
                 passwordHash: await this.hashPassword(password),
-                role: 'admin',
+                role: 'user',
                 totalPurchases: 0,
                 phoneNumber: phoneNumber
             })

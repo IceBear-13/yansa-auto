@@ -8,7 +8,7 @@ function About() {
           className="relative h-80 bg-cover bg-center"
           style={{
             backgroundImage:
-              'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/McLaren_Senna_IMG_3279.jpg/1200px-McLaren_Senna_IMG_3279.jpg")',
+              'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://www.topgear.com/sites/default/files/2023/12/1%20Land%20Rover%20Range%20Rover%20review.jpeg")',
           }}
         >
           <div className="absolute inset-0 flex items-center justify-center">
@@ -48,8 +48,8 @@ function About() {
                   perfect vehicle to meet their needs and preferences.
                 </p>
                 <a
-                  className="inline-block bg-[var(--primary-color)] text-white font-semibold py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
-                  href="#"
+                  className="inline-block bg-blue-600 text-white font-semibold py-3 px-6 rounded-md hover:bg-blue-800 transition-colors"
+                  href="/cars"
                 >
                   Explore Our Cars
                 </a>

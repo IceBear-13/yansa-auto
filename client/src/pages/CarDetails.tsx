@@ -1,5 +1,6 @@
+import { fetchCarByRegisterNumber } from "../api/carApi";
 import MainLayout from "../layout/MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function CarDetails() {
   const images: string[] = [
@@ -10,19 +11,34 @@ function CarDetails() {
     "https://lh3.googleusercontent.com/aida-public/AB6AXuBJwrRyAER6GFf7Y6HGxBqDootWPZrwr39tpuzIp-sEf0Ay91BsMky8Y-t4pGaA4db0wcJYTQDUJoXda-plIfE-w7UjwdPcnqlfkVlz2kCKRKNBpyGLLfWwl7RBS8fp6JtnU9Jc-osgdThZomUDaAOLjirrjcWbKRs_jRFe6AilqSMXgpX-tnaxVcvjai9axIhSOhnJMm6r1BDd4Upuk6FIK-rDkW5kdC7WTJ5u8e641gNCKVKqsHGp134LU4gdxkLu4MNuUnC9",
   ];
 
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
-  const [carId] = useState<string | null>(() => {
-    const parts = window.location.pathname.split('/').filter(Boolean);
-    if (parts.length >= 2 && parts[0] === "cars") {
-      try {
-        return decodeURIComponent(parts[1]);
-      } catch {
-        return parts[1];
+  const [car, setCar] = useState<any>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const carId = window.location.pathname.split("/").pop();
+
+  console.log(carId);
+
+  useEffect(() => {
+    const loadCar = async () => {
+      if (carId) {
+        const carData = await fetchCarByRegisterNumber(carId);
+        setCar(carData);
+        console.log(carData);
       }
-    }
-    return null;
-  });
+    };
+    loadCar();
+  }, [carId]);
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-ID", {
+        style: "currency",
+        currency: "IDR",
+    }).format(price);
+  };
+
+  if (!car) {
+    return <div>Loading...</div>;
+  }
 
 
   return (
@@ -33,7 +49,7 @@ function CarDetails() {
             Cars
           </a>
           <span className="mx-2">/</span>
-          <span className="font-medium text-gray-800">{carId}</span>
+          <span className="font-medium text-gray-800">{car.manufacturer} {car.model}</span>
         </div>
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
           <div className="lg:col-span-3">
@@ -84,13 +100,10 @@ function CarDetails() {
           </div>
           <div className="lg:col-span-2">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              Luxury Sedan
+              {car.model}
             </h1>
             <p className="mt-4 text-gray-600">
-              Experience the pinnacle of automotive engineering with the Luxury
-              Sedan. This vehicle combines cutting-edge technology, unparalleled
-              comfort, and breathtaking performance to redefine your driving
-              experience.
+              {car.description}
             </p>
             <div className="mt-8">
               <h2 className="text-2xl font-semibold text-gray-900">
@@ -98,45 +111,27 @@ function CarDetails() {
               </h2>
               <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-gray-200 pt-4">
                 <div>
-                  <p className="text-sm text-gray-500">Engine</p>
-                  <p className="font-medium text-gray-800">
-                    3.0L Twin-Turbocharged
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Transmission</p>
-                  <p className="font-medium text-gray-800">8-Speed Automatic</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Horsepower</p>
-                  <p className="font-medium text-gray-800">450 HP</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Torque</p>
-                  <p className="font-medium text-gray-800">406 lb-ft</p>
+                  <p className="text-sm text-gray-500">Year</p>
+                  <p className="font-medium text-gray-800">{car.year}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Fuel Economy</p>
-                  <p className="font-medium text-gray-800">22 / 31 MPG</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Seating</p>
-                  <p className="font-medium text-gray-800">5</p>
+                  <p className="font-medium text-gray-800">{car.fuelType}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Color</p>
-                  <p className="font-medium text-gray-800">Midnight Blue</p>
+                  <p className="font-medium text-gray-800">{car.color}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Mileage</p>
-                  <p className="font-medium text-gray-800">15,000 miles</p>
+                  <p className="font-medium text-gray-800">{car.mileage} KM</p>
                 </div>
               </div>
             </div>
             <div className="mt-10">
               <h2 className="text-2xl font-semibold text-gray-900">Pricing</h2>
               <p className="mt-2 text-3xl font-bold text-blue-600 ">
-                Starting at $75,000
+                {formatPrice(car.price)}
               </p>
               <div className="mt-6 flex gap-4">
                 <button className="flex flex-1 items-center justify-center rounded-lg hover:bg-white hover:text-blue-700 px-6 py-3 text-base font-bold text-white shadow-md bg-blue-700 transition-all">

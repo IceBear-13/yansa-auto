@@ -28,3 +28,8 @@ export const fetchFeaturedCars = async (): Promise<any[]> => {
     const cars = await axios.get(`${API_URL}/api/cars/featured`)
     return cars.data;
 }
+
+export const fetchCarByRegisterNumber = async (regNumber: string): Promise<any> => {
+    const car = await axios.get(`${API_URL}/api/cars/registration/${regNumber}`);
+    return car.data;
+}
