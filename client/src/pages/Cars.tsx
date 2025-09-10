@@ -1,11 +1,13 @@
 import { fetchAllCars } from "../api/carApi";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
+import VehicleSkeleton from "../components/VehicleSkeleton";
 import MainLayout from "../layout/MainLayout";
 import { useState, useEffect } from "react";
 
 function Cars() {
 
-  const [showedCars, setShowedCars] = useState<any[]>(JSON.parse(localStorage.getItem("cars") || "[]"));
+  const [showedCars, setShowedCars] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
 
   const sortByPriceAsc = () => {
@@ -25,12 +27,13 @@ function Cars() {
   
   useEffect(() => {
     const loadCars = async () => {
-
+      setIsLoading(true);
       const cars = await fetchAllCars();
       localStorage.setItem("cars", JSON.stringify(cars));
       const storedCars = JSON.parse(localStorage.getItem("cars") || "[]");
       const sortedCars = [...storedCars].sort((a, b) => a.price - b.price);
       setShowedCars(sortedCars);
+      setIsLoading(false);
     };
     loadCars();
   }, []);
@@ -64,8 +67,6 @@ function Cars() {
     });
     setShowedCars(filteredCars);
   }
-
-  console.log(Cars);
 
   return (
     <MainLayout>
@@ -193,21 +194,28 @@ function Cars() {
         </div>
       </section>
       <section className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 mb-16 p-10">
-        {showedCars.map((car) => (
-          <FeaturedVehicles
-            key={car.id}
-            image={car.images[0]}
-            title={car.model}
-            description={car.description}
-            price={formatPrice(car.price)}
-            car={{
-              make: car.make,
-              model: car.model,
-              year: car.year,
-              id: car.registrationNumber
-            }}
-          />
-        ))}
+        {isLoading ? (
+          // Show multiple skeletons while loading
+          Array.from({ length: 6 }).map((_, index) => (
+            <VehicleSkeleton key={index} />
+          ))
+        ) : (
+          showedCars.map((car) => (
+            <FeaturedVehicles
+              key={car.id}
+              image={car.images[0]}
+              title={car.model}
+              description={car.description}
+              price={formatPrice(car.price)}
+              car={{
+                make: car.make,
+                model: car.model,
+                year: car.year,
+                id: car.registrationNumber
+              }}
+            />
+          ))
+        )}
       </section>
     </MainLayout>
   );

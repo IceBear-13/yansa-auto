@@ -32,9 +32,9 @@ export default function Admin() {
           fetchAllCars(),
           fetchAllInquiries()
         ]);
-        
         setCarCount(cars.length);
         setInquiries(inquiriesData);
+        
       } catch (error) {
         console.error("Error loading admin data:", error);
         setAccessDenied(true);
