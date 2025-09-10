@@ -5,3 +5,4 @@ request.rest
 car-images/*
 drizzle/migrations/*
 drizzle/meta/*
+drizzle/*
