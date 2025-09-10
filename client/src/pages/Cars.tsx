@@ -68,6 +68,11 @@ function Cars() {
     setShowedCars(filteredCars);
   }
 
+  const shortenDescription = (description: string, maxLength: number) => {
+    if (description.length <= maxLength) return description;
+    return description.slice(0, maxLength) + "...";
+  };
+
   return (
     <MainLayout>
       <section>
@@ -204,8 +209,8 @@ function Cars() {
             <FeaturedVehicles
               key={car.id}
               image={car.images[0]}
-              title={car.model}
-              description={car.description}
+              title={car.manufacturer + " " + car.model}
+              description={shortenDescription(car.description, 100)}
               price={formatPrice(car.price)}
               car={{
                 make: car.make,

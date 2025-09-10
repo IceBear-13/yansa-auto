@@ -5,17 +5,20 @@ import { useEffect, useState } from "react";
 function CarDetails() {
   const [car, setCar] = useState<any>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
   const carId = window.location.pathname.split("/").pop();
 
   console.log(carId);
 
   useEffect(() => {
     const loadCar = async () => {
+      setIsLoading(true);
       if (carId) {
         const carData = await fetchCarByRegisterNumber(carId);
         setCar(carData);
         console.log(carData);
       }
+      setIsLoading(false);
     };
     loadCar();
   }, [carId]);
@@ -27,13 +30,100 @@ function CarDetails() {
     }).format(price);
   };
 
+  const formatNumberWithCommas = (num: number) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   // Fix: Add fallback for undefined images
   const images = car?.car?.images ? [...car.car.images] : [];
 
-  if (!car) {
-    return <div>Loading...</div>;
+  const CarDetailsSkeleton = () => (
+    <div className="w-full px-10 mb-20 mt-10 animate-pulse">
+      {/* Breadcrumb skeleton */}
+      <div className="mb-6 flex items-center">
+        <div className="h-4 w-12 bg-gray-300 rounded"></div>
+        <span className="mx-2 text-gray-300">/</span>
+        <div className="h-4 w-32 bg-gray-300 rounded"></div>
+      </div>
+      
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+        {/* Image section skeleton */}
+        <div className="lg:col-span-3">
+          <div className="relative overflow-hidden rounded-lg shadow-lg">
+            <div className="bg-gray-300 aspect-[4/3]"></div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className="size-2 rounded-full bg-gray-400"
+                ></div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-4 grid grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div
+                key={i}
+                className="overflow-hidden rounded-md"
+              >
+                <div className="h-20 w-full bg-gray-300"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Details section skeleton */}
+        <div className="lg:col-span-2">
+          <div className="h-10 w-3/4 bg-gray-300 rounded mb-4"></div>
+          <div className="space-y-2">
+            <div className="h-4 w-full bg-gray-300 rounded"></div>
+            <div className="h-4 w-full bg-gray-300 rounded"></div>
+            <div className="h-4 w-2/3 bg-gray-300 rounded"></div>
+          </div>
+          
+          <div className="mt-8">
+            <div className="h-8 w-40 bg-gray-300 rounded mb-4"></div>
+            <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-gray-200 pt-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i}>
+                  <div className="h-3 w-16 bg-gray-300 rounded mb-1"></div>
+                  <div className="h-4 w-20 bg-gray-300 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="mt-10">
+            <div className="h-8 w-24 bg-gray-300 rounded mb-2"></div>
+            <div className="h-9 w-48 bg-gray-300 rounded mb-6"></div>
+            <div className="flex gap-4">
+              <div className="flex-1 h-12 bg-gray-300 rounded-lg"></div>
+              <div className="flex-1 h-12 bg-gray-300 rounded-lg"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return (
+      <MainLayout>
+        <CarDetailsSkeleton />
+      </MainLayout>
+    );
   }
 
+  if (!car) {
+    return (
+      <MainLayout>
+        <div className="w-full px-10 mb-20 mt-10 text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Car not found</h1>
+          <p className="mt-2 text-gray-600">The car you're looking for doesn't exist.</p>
+        </div>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout>
@@ -118,7 +208,7 @@ function CarDetails() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Mileage</p>
-                  <p className="font-medium text-gray-800">{car.car.mileage} KM</p>
+                  <p className="font-medium text-gray-800">{formatNumberWithCommas(car.car.mileage)} KM</p>
                 </div>
               </div>
             </div>

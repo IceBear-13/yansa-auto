@@ -108,7 +108,7 @@ const Home = () => {
                                 <FeaturedVehicles
                                     key={car.registrationNumber}
                                     image={car.images[0]}
-                                    title={car.model}
+                                    title={car.manufacturer + " " + car.model}
                                     description={car.description}
                                     price={formatPrice(car.price)}
                                     car={{ make: car.make, model: car.model, year: car.year, id: car.registrationNumber }}
