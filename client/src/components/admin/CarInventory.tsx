@@ -4,7 +4,7 @@ interface Car {
     registrationNumber: string;
     model: string;
     year: number;
-    price: number;
+    price: string;
     imageUrl: string;
 }
 
@@ -37,18 +37,6 @@ export function CarInventory({registrationNumber, model, year, price, imageUrl}:
         {year}
       </td>
       <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-        {price}
-      </td>
-      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-        {model}
-      </td>
-      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
-        {registrationNumber}
-      </td>
-      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-        {year}
-      </td>
-      <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
         {price}
       </td>
       <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
