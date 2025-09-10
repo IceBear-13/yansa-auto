@@ -37,7 +37,7 @@ export const authenticate = async (token: string) => {
             }
         }
     )
-    return user.data;
+    return {user: user.data, status: user.status};
 
     } catch (error) {
         console.error("Error authenticating user:", error);

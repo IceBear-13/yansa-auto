@@ -11,7 +11,7 @@ class inquiriesService {
         }
     }
 
-    async createInquiry(inquiry: inquiry) {
+    async createInquiry(inquiry: Partial<inquiry>) {
         try {
             const newInquiry = await inquiries.createInquiry(inquiry);
             return newInquiry;

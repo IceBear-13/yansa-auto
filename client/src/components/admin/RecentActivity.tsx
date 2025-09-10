@@ -1,4 +1,4 @@
-export default function RecentActivity() {
+export default function RecentActivity({name, message, createdAt}: {name: string, message: string, createdAt: Date}) {
   return (
     <li>
       <div className="relative pb-8">
@@ -13,11 +13,11 @@ export default function RecentActivity() {
           <div className="min-w-0 flex-1 py-1.5">
             <div className="text-sm text-gray-500">
               <span className="font-medium text-gray-900">New inquiry</span>{" "}
-              from Alex Johnson
-              <span className="whitespace-nowrap float-right">19/10/2024 9:00 AM</span>
+              from {name}
+              <span className="whitespace-nowrap float-right">{createdAt.toLocaleString()}</span>
             </div>
             <p className="mt-1 text-sm text-gray-500">
-              Interested in the '2023 SUV Pro'.
+              {message}
             </p>
           </div>
         </div>

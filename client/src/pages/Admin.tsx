@@ -3,27 +3,33 @@ import { authenticate } from "../api/authApi";
 import { useState } from "react";
 import RecentActivity from "../components/admin/RecentActivity";
 import { fetchAllCars } from "../api/carApi";
+import { fetchAllInquiries } from "../api/inquiries";
 
 export default function Admin() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [carCount, setCarCount] = useState(0);
+  const [inquiries, setInquiries] = useState<any[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
   onload = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
     const user = await authenticate(token || "");
-    if (!user || user.role !== "admin") {
+
+    if (user.status === 401 || user.user.role !== "admin") {
       setIsAdmin(false);
       setIsLoading(false);
       return;
     }
+
     setIsAdmin(true);
     setIsLoading(false);
 
     const cars = await fetchAllCars();
+    const inquiries = await fetchAllInquiries();
     const carCount = cars.length;
     setCarCount(carCount);
+    setInquiries(inquiries);
   };
   
 
@@ -82,7 +88,14 @@ export default function Admin() {
       <section className="p-10">
         <h2 className="text-xl font-semibold text-gray-800">Recent Activity</h2>
         <ul className="flex flex-col gap-4 mt-4">
-          <RecentActivity />
+          {inquiries.map((inquiry) => (
+            <RecentActivity 
+              key={inquiry.id}
+              name={inquiry.name}
+              message={inquiry.message}
+              createdAt={new Date(inquiry.createdAt)}
+            />
+          ))}
         </ul>
       </section>
     </MainLayout>

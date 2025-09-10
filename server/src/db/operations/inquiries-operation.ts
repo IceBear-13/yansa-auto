@@ -2,10 +2,13 @@ import { inquiries } from "../schema/inquiries"
 import { db } from "../db";
 import { type inquiry } from "../../models/inquiries";
 
-export const createInquiry = async (inquiry: inquiry): Promise<inquiry> => {
+export const createInquiry = async (inquiry: Partial<inquiry>): Promise<inquiry> => {
+    if (!inquiry.message || !inquiry.name || !inquiry.phoneNumber) {
+        throw new Error("Missing required fields: name, phoneNumber, message");
+    }
     const [createdInquiry] = await db.insert(inquiries).values({
         name: inquiry.name,
-        email: inquiry.email,
+        phoneNumber: inquiry.phoneNumber,
         message: inquiry.message,
         settled: false,
     }).returning();
@@ -13,7 +16,7 @@ export const createInquiry = async (inquiry: inquiry): Promise<inquiry> => {
     const newInquiry: inquiry = {
         id: createdInquiry.id,
         name: createdInquiry.name,
-        email: createdInquiry.email,
+        phoneNumber: createdInquiry.phoneNumber,
         message: createdInquiry.message,
         createdAt: new Date(createdInquiry.createdAt),
         updatedAt: new Date(createdInquiry.updatedAt),
@@ -29,7 +32,7 @@ export const getInquiries = async (): Promise<inquiry[]> => {
     return allInquiries.map(inquiry => ({
         id: inquiry.id,
         name: inquiry.name,
-        email: inquiry.email,
+        phoneNumber: inquiry.phoneNumber,
         message: inquiry.message,
         createdAt: new Date(inquiry.createdAt),
         updatedAt: new Date(inquiry.updatedAt),

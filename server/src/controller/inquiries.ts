@@ -18,11 +18,12 @@ class inquiriesController {
 
     async createInquiry(req: AuthRequest, res: Response) {
         try {
-            const inquiryData: inquiry = req.body;
+            const inquiryData: {name: string, phoneNumber: string, message: string} = req.body;
             const newInquiry = await inquiriesService.createInquiry(inquiryData);
             res.status(201).json(newInquiry);
         } catch (error) {
             res.status(500).json({ message: error });
+            console.error(error);
         }
     }
 

@@ -11,8 +11,16 @@ export default function Register() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
-      const user = await authenticate(token || "");
-      setIsVerified(!!user);
+      if (!token) {
+        setIsVerified(false);
+        return;
+      }
+      const user = await authenticate(token!);
+      if (!user.status || user.status === 401) {
+        setIsVerified(false);
+      } else {
+        setIsVerified(true);
+      }
     };
     checkAuth();
   }, []);

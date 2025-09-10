@@ -27,7 +27,7 @@ export default function AddNewCar() {
     setIsLoading(true);
     const token = localStorage.getItem("token");
     const user = await authenticate(token || "");
-    if (!user || user.role !== "admin") {
+    if (user.status === 401 || user.user.role !== "admin") {
       setIsAdmin(false);
       setIsLoading(false);
       return;
@@ -339,6 +339,14 @@ const submit = async () => {
               placeholder="e.g. A4" 
               value={formData.description} 
               onChange={(value) => handleInputChange('description', value)} 
+            />
+            <FormInput 
+              label="Featured"
+              id="featured"
+              type="text"
+              placeholder="true/false"
+              value={formData.featured ? "true" : "false"}
+              onChange={(value) => handleInputChange('featured', value)}
             />
             <div className="col-span-1 md:col-span-2 mt-6"></div>
             <button

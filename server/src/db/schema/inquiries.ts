@@ -1,15 +1,12 @@
-import { boolean } from "drizzle-orm/pg-core";
-import { date } from "drizzle-orm/pg-core";
-import { uuid } from "drizzle-orm/pg-core";
-import { pgTable } from "drizzle-orm/pg-core";
+import { boolean, varchar, text, timestamp, uuid, pgTable } from "drizzle-orm/pg-core";
 
 export const inquiries = pgTable("inquiries", {
     id: uuid("id").defaultRandom().primaryKey(),
-    name: uuid("name").notNull(),
-    email: uuid("email").notNull(),
-    message: uuid("message").notNull(),
-    createdAt: date("created_at").notNull().defaultNow(),
-    updatedAt: date("updated_at").notNull().defaultNow(),
+    name: varchar("name", { length: 100 }).notNull(),
+    phoneNumber: varchar("phone_number", { length: 20 }).notNull(),
+    message: text("message").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
     settled: boolean("settled").notNull().default(false),
-    settledAt: date("settled_at"),
+    settledAt: timestamp("settled_at"),
 })

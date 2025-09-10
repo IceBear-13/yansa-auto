@@ -13,14 +13,23 @@ export default function Login() {
 useEffect(() => {
     const checkAuth = async () => {
         setIsLoading(true);
-        const token = localStorage.getItem("token");
-        const user = await authenticate(token || "");
-        if (!user) {
-          setIsVerified(false);
-          setIsLoading(false);
-          return;
-        } else{
-          setIsVerified(true);
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              setIsVerified(false);
+              setIsLoading(false);
+              return;
+            }
+            const user = await authenticate(token!);
+            if (!user.status || user.status === 401) {
+              setIsVerified(false);
+              setIsLoading(false);
+              return;
+            } else{
+              setIsVerified(true);
+            }
+        } catch (error) {
+            setIsVerified(false);
         }
         setIsLoading(false);
     };
@@ -50,6 +59,7 @@ useEffect(() => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
 
   return !isVerified ? (
     <div className="w-full h-screen flex py-[5%] px-[10%]">

@@ -1,7 +1,7 @@
 export interface inquiry {
     id: string;
     name: string;
-    email: string;
+    phoneNumber?: string;
     message: string;
     createdAt: Date;
     updatedAt: Date;

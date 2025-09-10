@@ -14,9 +14,7 @@ const Home = () => {
             localStorage.setItem("featuredCars", JSON.stringify(cars));
         };
 
-        if(!localStorage.getItem("featuredCars")){
-            fetchData();
-        }
+        fetchData();        
 
         console.log("Car objects:", cars);
         console.log("First car structure:", cars[0]);
