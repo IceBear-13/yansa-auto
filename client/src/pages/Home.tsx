@@ -2,23 +2,27 @@ import { useEffect, useState } from "react";
 import MainLayout from "../layout/MainLayout";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
 import { fetchFeaturedCars } from "../api/carApi";
+import VehicleSkeleton from "../components/VehicleSkeleton";
 
 const Home = () => {
     const [query, setQuery] = useState("");
-    const [cars, setCars] = useState<any[]>(JSON.parse(localStorage.getItem("featuredCars") || "[]"));
+    const [cars, setCars] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const cars = await fetchFeaturedCars();
-            setCars(cars);
-            localStorage.setItem("featuredCars", JSON.stringify(cars));
+            try {
+                setIsLoading(true);
+                const cars = await fetchFeaturedCars();
+                setCars(cars);
+            } catch (error) {
+                console.error("Error fetching cars:", error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         fetchData();        
-
-        console.log("Car objects:", cars);
-        console.log("First car structure:", cars[0]);
-        
     }, []);
 
     const formatPrice = (price: number) => {
@@ -93,16 +97,24 @@ const Home = () => {
                 <div className="container mx-auto px-4">
                     <h2 className="text-center text-4xl font-bold tracking-tight text-gray-900">Featured Vehicles</h2>
                     <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                        {displayedCars.map((car: any) => (
-                    <FeaturedVehicles
-                        key={car.registrationNumber}
-                        image={car.images[0]}
-                        title={car.model}
-                        description={car.description}
-                        price={formatPrice(car.price)}
-                        car={{ make: car.make, model: car.model, year: car.year, id: car.registrationNumber }}
-                    />
-                    ))}
+                        {isLoading ? (
+                            // Show skeleton loaders while loading
+                            Array.from({ length: 3 }).map((_, index) => (
+                                <VehicleSkeleton key={index} />
+                            ))
+                        ) : (
+                            // Show actual cars when loaded
+                            displayedCars.map((car: any) => (
+                                <FeaturedVehicles
+                                    key={car.registrationNumber}
+                                    image={car.images[0]}
+                                    title={car.model}
+                                    description={car.description}
+                                    price={formatPrice(car.price)}
+                                    car={{ make: car.make, model: car.model, year: car.year, id: car.registrationNumber }}
+                                />
+                            ))
+                        )}
                     </div>
                 </div>
             </section>
