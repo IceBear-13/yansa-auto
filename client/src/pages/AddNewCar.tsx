@@ -25,8 +25,7 @@ export default function AddNewCar() {
 
   onload = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("token");
-    const user = await authenticate(token || "");
+    const user = await authenticate();
     if (user.status === 401 || user.user.role !== "admin") {
       setIsAdmin(false);
       setIsLoading(false);

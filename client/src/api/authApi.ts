@@ -11,7 +11,7 @@ export const login = async (usernameOrEmail:string, password: string) => {
         }
     )
 
-    return user.data;
+    return {status: user.status, token: user.data.token};
 }
 
 export const register = async (username: string, email: string, password: string, phoneNumber: string) => {
@@ -28,12 +28,12 @@ export const register = async (username: string, email: string, password: string
     return user.data;
 }
 
-export const authenticate = async (token: string) => {
+export const authenticate = async () => {
     try{
         const user = await axios.get(
         `${API_URL}/api/auth/authenticate`, {
             headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${localStorage.getItem("token")}`
             }
         }
     )

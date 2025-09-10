@@ -15,7 +15,7 @@ export default function Register() {
         setIsVerified(false);
         return;
       }
-      const user = await authenticate(token!);
+      const user = await authenticate();
       if (!user.status || user.status === 401) {
         setIsVerified(false);
       } else {

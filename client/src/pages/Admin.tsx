@@ -13,8 +13,7 @@ export default function Admin() {
   const [isLoading, setIsLoading] = useState(true);
   onload = async () => {
     setIsLoading(true);
-    const token = localStorage.getItem("token");
-    const user = await authenticate(token || "");
+    const user = await authenticate();
 
     if (user.status === 401 || user.user.role !== "admin") {
       setIsAdmin(false);

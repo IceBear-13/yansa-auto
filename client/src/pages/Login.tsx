@@ -20,7 +20,7 @@ useEffect(() => {
               setIsLoading(false);
               return;
             }
-            const user = await authenticate(token!);
+            const user = await authenticate();
             if (!user.status || user.status === 401) {
               setIsVerified(false);
               setIsLoading(false);
@@ -41,7 +41,7 @@ useEffect(() => {
     const password = (document.getElementById('pwdLogin') as HTMLInputElement)?.value;
 
     const token = await login(username, password);
-    if (token) {
+    if (token.status === 200) {
       localStorage.setItem("token", token.token);
     } else{
       setWrongCredentials(true);
