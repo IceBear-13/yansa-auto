@@ -25,11 +25,9 @@ function Cars() {
   
   useEffect(() => {
     const loadCars = async () => {
-      if(!localStorage.getItem("cars")){
-        const cars = await fetchAllCars();
-        localStorage.setItem("cars", JSON.stringify(cars));
-        setShowedCars(cars);
-      }
+
+      const cars = await fetchAllCars();
+      localStorage.setItem("cars", JSON.stringify(cars));
       const storedCars = JSON.parse(localStorage.getItem("cars") || "[]");
       const sortedCars = [...storedCars].sort((a, b) => a.price - b.price);
       setShowedCars(sortedCars);
@@ -66,6 +64,8 @@ function Cars() {
     });
     setShowedCars(filteredCars);
   }
+
+  console.log(Cars);
 
   return (
     <MainLayout>
@@ -196,7 +196,7 @@ function Cars() {
         {showedCars.map((car) => (
           <FeaturedVehicles
             key={car.id}
-            image={car.image}
+            image={car.images[0]}
             title={car.model}
             description={car.description}
             price={formatPrice(car.price)}

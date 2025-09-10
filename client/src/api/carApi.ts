@@ -33,3 +33,38 @@ export const fetchCarByRegisterNumber = async (regNumber: string): Promise<any> 
     const car = await axios.get(`${API_URL}/api/cars/registration/${regNumber}`);
     return car.data;
 }
+
+
+export const addNewCar = async (formData: FormData) => {
+  const token = localStorage.getItem("token");
+  
+  const response = await fetch("http://localhost:3000/api/cars/create", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to add car");
+  }
+
+  return response.json();
+};
+
+export const deleteCarByRegistrationNumber = async (regNumber: string) => {
+  const token = localStorage.getItem("token");
+
+  const response = await axios.delete(`http://localhost:3000/api/cars/delete/${regNumber}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Failed to delete car");
+  }
+
+  return response;
+};

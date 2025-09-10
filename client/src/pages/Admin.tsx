@@ -2,15 +2,17 @@ import MainLayout from "../layout/MainLayout";
 import { authenticate } from "../api/authApi";
 import { useState } from "react";
 import RecentActivity from "../components/admin/RecentActivity";
+import { fetchAllCars } from "../api/carApi";
 
 export default function Admin() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [carCount, setCarCount] = useState(0);
 
   const [isLoading, setIsLoading] = useState(true);
   onload = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("token");
-    const user = await authenticate(token!);
+    const user = await authenticate(token || "");
     if (!user || user.role !== "admin") {
       setIsAdmin(false);
       setIsLoading(false);
@@ -18,7 +20,12 @@ export default function Admin() {
     }
     setIsAdmin(true);
     setIsLoading(false);
+
+    const cars = await fetchAllCars();
+    const carCount = cars.length;
+    setCarCount(carCount);
   };
+  
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -34,12 +41,7 @@ export default function Admin() {
               <span className="material-symbols-outlined"></span>
             </span>
           </div>
-          <p className="mt-2 text-3xl font-bold text-gray-900">125</p>
-        </div>
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-medium text-gray-600">New Listings</p>
-          </div>
+          <p className="mt-2 text-3xl font-bold text-gray-900">{carCount}</p>
         </div>
       </section>
       <section className="mt-8 p-10">
@@ -65,7 +67,7 @@ export default function Admin() {
             </span>
             <span>Manage Users</span>
           </button>
-          <button className="flex min-w-[150px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50">
+          <button className="flex min-w-[150px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50" >
             <span className="material-symbols-outlined">
               <img
                 src="https://www.iconpacks.net/icons/2/free-settings-icon-3110-thumb.png"
@@ -73,7 +75,7 @@ export default function Admin() {
                 className="size-4"
               />
             </span>
-            <span>Add transactions</span>
+            <span>Inventory</span>
           </button>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.BACKEND_URL || 'http://35.78.221.49:8080'
+const API_URL = import.meta.env.BACKEND_URL || 'http://localhost:3000'
 
 export const login = async (usernameOrEmail:string, password: string) => {
     const user = await axios.post(
@@ -29,12 +29,18 @@ export const register = async (username: string, email: string, password: string
 }
 
 export const authenticate = async (token: string) => {
-    const user = await axios.get(
+    try{
+        const user = await axios.get(
         `${API_URL}/api/auth/authenticate`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-    })
-
+        }
+    )
     return user.data;
+
+    } catch (error) {
+        console.error("Error authenticating user:", error);
+        return { status: 401, message: "Unauthorized" };
+    }
 }

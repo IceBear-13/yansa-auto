@@ -8,7 +8,6 @@ const Home = () => {
     const [cars, setCars] = useState<any[]>(JSON.parse(localStorage.getItem("featuredCars") || "[]"));
 
     useEffect(() => {
-
         const fetchData = async () => {
             const cars = await fetchFeaturedCars();
             setCars(cars);
@@ -18,6 +17,9 @@ const Home = () => {
         if(!localStorage.getItem("featuredCars")){
             fetchData();
         }
+
+        console.log("Car objects:", cars);
+        console.log("First car structure:", cars[0]);
         
     }, []);
 
@@ -94,15 +96,15 @@ const Home = () => {
                     <h2 className="text-center text-4xl font-bold tracking-tight text-gray-900">Featured Vehicles</h2>
                     <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                         {displayedCars.map((car: any) => (
-                            <FeaturedVehicles
-                                key={car.id}
-                                image={car.image}
-                                title={car.model}
-                                description={car.description}
-                                price={formatPrice(car.price)}
-                                car={{ make: car.make, model: car.model, year: car.year, id: car.id }}
-                            />
-                        ))}
+                    <FeaturedVehicles
+                        key={car.registrationNumber}
+                        image={car.images[0]}
+                        title={car.model}
+                        description={car.description}
+                        price={formatPrice(car.price)}
+                        car={{ make: car.make, model: car.model, year: car.year, id: car.registrationNumber }}
+                    />
+                    ))}
                     </div>
                 </div>
             </section>

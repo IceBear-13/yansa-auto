@@ -15,7 +15,13 @@ useEffect(() => {
         setIsLoading(true);
         const token = localStorage.getItem("token");
         const user = await authenticate(token || "");
-        setIsVerified(!!user);
+        if (!user) {
+          setIsVerified(false);
+          setIsLoading(false);
+          return;
+        } else{
+          setIsVerified(true);
+        }
         setIsLoading(false);
     };
     checkAuth();

@@ -7,6 +7,8 @@ import CarDetails from "../pages/CarDetails";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Admin from "../pages/Admin";
+import AddNewCar from "../pages/AddNewCar";
+import Inventory from "../pages/Inventory";
 
 
 const router = createBrowserRouter(
@@ -52,8 +54,20 @@ const router = createBrowserRouter(
             element: <Admin />
         },
         {
+            path: "/admin/add-new-car/",
+            element: <AddNewCar />
+        },
+        {
+            path: "/admin/inventory",
+            element: <Inventory />
+        },
+        {
             path: "/account",
             element: <div>Account</div>
+        },
+        {
+            path: "*",
+            element: <div>404 Not Found</div>
         }
     ]
 )
