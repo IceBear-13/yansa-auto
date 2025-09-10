@@ -5,4 +5,4 @@ import { authMiddleware } from '../middleware/authMiddleware';
 export const inquiriesRouter = Router();
 
 inquiriesRouter.get('/', authMiddleware, inquiriesControllerInstance.getInquiries.bind(inquiriesControllerInstance));
-inquiriesRouter.post('/create', authMiddleware, inquiriesControllerInstance.createInquiry.bind(inquiriesControllerInstance));
+inquiriesRouter.post('/create', inquiriesControllerInstance.createInquiry.bind(inquiriesControllerInstance));

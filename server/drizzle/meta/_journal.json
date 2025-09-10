@@ -3,45 +3,17 @@
   "dialect": "postgresql",
   "entries": [
     {
-      "idx": 0,
+      "idx": 6,
       "version": "7",
-      "when": 1752758217152,
-      "tag": "0000_simple_changeling",
+      "when": 1757475425683,
+      "tag": "0006_tan_talos",
       "breakpoints": true
     },
     {
-      "idx": 1,
+      "idx": 7,
       "version": "7",
-      "when": 1752759154034,
-      "tag": "0001_flawless_unicorn",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1752761184706,
-      "tag": "0002_perpetual_corsair",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1752766101243,
-      "tag": "0003_eager_iron_lad",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1752907958059,
-      "tag": "0004_glossy_deadpool",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1756804713282,
-      "tag": "0005_windy_edwin_jarvis",
+      "when": 1757475707723,
+      "tag": "0007_certain_shaman",
       "breakpoints": true
     }
   ]

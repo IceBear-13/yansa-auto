@@ -3,3 +3,5 @@ node_modules/*
 .env
 request.rest
 car-images/*
+drizzle/migrations/*
+drizzle/meta/*
