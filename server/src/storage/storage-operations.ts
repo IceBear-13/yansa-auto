@@ -22,3 +22,35 @@ export const uploadCarImage = async (file: Express.Multer.File, registrationNumb
     }
 
 }
+
+export const getCarImages = async (registrationNumber: string): Promise<string[]> => {
+    try {
+        const { data, error } = await supabase.storage
+            .from('car-images')
+            .list(`cars/${registrationNumber}`);
+        
+        if (error) {
+            throw new Error(`Failed to list images: ${error.message}`);
+        }
+        
+        if (!data || data.length === 0) {
+            console.log(`No images found for registration: ${registrationNumber}`);
+            return [];
+        }
+
+
+        const imageUrls = data.map(file => {
+            const publicUrl = supabase.storage
+                .from('car-images')
+                .getPublicUrl(`cars/${registrationNumber}/${file.name}`).data.publicUrl;
+            
+            return publicUrl;
+        });
+
+        return imageUrls;
+
+    } catch (error) {
+        console.error(`Failed to get images: ${error}`);
+        throw error; // Throw the error instead of returning a rejected promise
+    }
+}

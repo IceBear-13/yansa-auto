@@ -2,12 +2,18 @@ import { carsService } from '../services/CarsService';
 import { AuthRequest } from '../models/requests/AuthRequest';
 import { Request, Response } from 'express';
 import { Car } from '../models/cars';
+import { getCarImages } from '../storage/storage-operations';
+import { deleteCar } from '../db/operations/cars-operations';
 
 export class carController {
 
     async getCars(req: Request, res: Response) {
         try {
             const cars = await carsService.getAllCars();
+            for (const car of cars) {
+                const images = await getCarImages(car.registrationNumber!);
+                (car as any).images = images;
+            }
             res.status(200).json(cars);
         } catch (error) {
             res.status(500).json({ message: 'Error retrieving cars', error });
@@ -75,19 +81,14 @@ export class carController {
 
         try{
             const car: Car = req.body;
-            const image = req.file;
+            const images = req.file;
 
             if(!car) {
                 res.status(400).json({ message: 'Car data is required' });
                 return;
             }
 
-            if(!image) {
-                res.status(400).json({ message: 'Car image is required' });
-                return;
-            }
-
-            carsService.createCar(car, image);
+            await carsService.createCar(car, images!);
             res.status(201).json({ message: 'Car created successfully' });
         } catch (error) {
             res.status(500).json({ message: 'Error creating car', error });
@@ -99,8 +100,10 @@ export class carController {
 
         try {
             const car = await carsService.getCarByRegistrationNumber(registrationNumber);
+            const images = await getCarImages(registrationNumber);
+            (car as any).images = images;
             if (car) {
-                res.status(200).json(car);
+                res.status(200).json({ car });
             } else {
                 res.status(404).json({ message: 'Car not found' });
             }
@@ -133,9 +136,35 @@ export class carController {
     async getFeaturedCars(req: AuthRequest, res: Response) {
         try {
             const cars = await carsService.getFeaturedCars();
+            for (const car of cars) {
+                const images = await getCarImages(car.registrationNumber!);
+                (car as any).images = images;
+            }
             res.status(200).json(cars);
         } catch (error) {
             res.status(500).json({ message: 'Error retrieving featured cars', error });
+        }
+    }
+
+    async deleteCar(req: AuthRequest, res: Response) {
+        const user = req.user;
+        if(!user || user.role !== 'admin') {
+            console.log(user);
+            res.status(403).json({message: 'Forbidden. Only admins can delete cars.'});
+            return;
+        }
+
+        const registrationNumber = req.params.registrationNumber;
+
+        try {
+            const car = await carsService.deleteCar(registrationNumber);
+            if (car) {
+                res.status(200).json({ message: 'Car deleted successfully' });
+            } else {
+                res.status(404).json({ message: 'Car not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Error deleting car', error });
         }
     }
 }

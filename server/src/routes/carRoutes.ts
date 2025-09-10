@@ -5,7 +5,12 @@ import { authMiddleware } from "../middleware/authMiddleware";
 
 export const carRouter = Router();
 
-const upload = multer({ dest: 'data/car-images/' });
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    }
+});
 
 carRouter.get('/all', carControllerInstance.getCars.bind(carControllerInstance));
 carRouter.get('/model/:model', carControllerInstance.getCarsByModel.bind(carControllerInstance));
@@ -18,4 +23,5 @@ carRouter.post('/features', carControllerInstance.getCarByFeatures.bind(carContr
 carRouter.post('/create', authMiddleware, upload.single('images'), carControllerInstance.createCar.bind(carControllerInstance));
 carRouter.get('/featured', carControllerInstance.getFeaturedCars.bind(carControllerInstance));
 carRouter.get('/registration/:registrationNumber', carControllerInstance.getCarByRegistrationNumber.bind(carControllerInstance));
+carRouter.delete('/delete/:registrationNumber', authMiddleware, carControllerInstance.deleteCar.bind(carControllerInstance));
 // carRouter.put('/update/:registrationNumber', authMiddleware, carControllerInstance.updateCar.bind(carControllerInstance));

@@ -30,8 +30,6 @@ app.get('/healthcheck', (req: Request, res: Response) => {
     res.status(200).json({ message: "Server is running" });
 });
 
-const database = db;
-
 app.listen(PORT, () => {
     console.log('Server is running on port', PORT);
 })
