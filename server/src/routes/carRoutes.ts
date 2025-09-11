@@ -24,4 +24,4 @@ carRouter.post('/create', authMiddleware, upload.single('images'), carController
 carRouter.get('/featured', carControllerInstance.getFeaturedCars.bind(carControllerInstance));
 carRouter.get('/registration/:registrationNumber', carControllerInstance.getCarByRegistrationNumber.bind(carControllerInstance));
 carRouter.delete('/delete/:registrationNumber', authMiddleware, carControllerInstance.deleteCar.bind(carControllerInstance));
-// carRouter.put('/update/:registrationNumber', authMiddleware, carControllerInstance.updateCar.bind(carControllerInstance));
+carRouter.put('/update/:registrationNumber', authMiddleware, carControllerInstance.updateCar.bind(carControllerInstance));

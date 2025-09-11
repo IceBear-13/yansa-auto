@@ -167,5 +167,28 @@ export class carController {
             res.status(500).json({ message: 'Error deleting car', error });
         }
     }
+
+    async updateCar(req: AuthRequest, res: Response) {
+        const user = req.user;
+        if(!user || user.role !== 'admin') {
+            console.log(user);
+            res.status(403).json({message: 'Forbidden. Only admins can update cars.'});
+            return;
+        }
+
+        const registrationNumber = req.params.registrationNumber;
+        const updatedFields: Partial<Car> = req.body;
+
+        try {
+            const car = await carsService.updateCar(registrationNumber, updatedFields);
+            if (car) {
+                res.status(200).json({ message: 'Car updated successfully', car });
+            } else {
+                res.status(404).json({ message: 'Car not found' });
+            }
+        } catch (error) {
+            res.status(500).json({ message: 'Error updating car', error });
+        }
+    }
 }
 export const carControllerInstance = new carController();
