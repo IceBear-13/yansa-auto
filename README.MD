@@ -52,6 +52,12 @@ docker build -t yansa-auto-server .
 docker run -p 3000:3000 yansa-auto-server
 ```
 
+### Or run the docker-compose
+```sh
+docker-compose build
+docker-compose up
+```
+
 ## Scripts
 - `npm run dev` – Start development server
 - `npm run build` – Build for production
