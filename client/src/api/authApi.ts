@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.BACKEND_URL || 'http://35.78.221.49:8080'
+const API_URL = import.meta.env.BACKEND_URL || 'http://35.78.221.49:8080';
 
 export const login = async (usernameOrEmail:string, password: string) => {
     const user = await axios.post(

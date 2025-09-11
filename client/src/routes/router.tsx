@@ -9,6 +9,7 @@ import Register from "../pages/Register";
 import Admin from "../pages/Admin";
 import AddNewCar from "../pages/AddNewCar";
 import Inventory from "../pages/Inventory";
+import EditCar from "../pages/EditCar";
 
 
 const router = createBrowserRouter(
@@ -62,13 +63,18 @@ const router = createBrowserRouter(
             element: <Inventory />
         },
         {
+            path: "/admin/edit/:id",
+            element: <EditCar />
+        },
+        {
             path: "/account",
             element: <div>Account</div>
         },
         {
             path: "*",
             element: <div>404 Not Found</div>
-        }
+        },
+        
     ]
 )
 

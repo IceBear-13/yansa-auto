@@ -68,3 +68,21 @@ export const deleteCarByRegistrationNumber = async (regNumber: string) => {
 
   return response;
 };
+
+export const editCarByRegistrationNumber = async (regNumber: string, formData: FormData) => {
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(`${API_URL}/api/cars/update/${regNumber}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update car");
+  }
+
+  return response.json();
+};
