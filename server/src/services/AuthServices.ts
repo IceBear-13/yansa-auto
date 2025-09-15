@@ -109,10 +109,6 @@ export class AuthServices {
         }
     }
 
-    async logout(token: string): Promise<void> {
-        
-    }
-
 
 }
 
