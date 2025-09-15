@@ -10,6 +10,7 @@ import Admin from "../pages/Admin";
 import AddNewCar from "../pages/AddNewCar";
 import Inventory from "../pages/Inventory";
 import EditCar from "../pages/EditCar";
+import Logout from "../pages/Logout";
 
 
 const router = createBrowserRouter(
@@ -74,7 +75,10 @@ const router = createBrowserRouter(
             path: "*",
             element: <div>404 Not Found</div>
         },
-        
+        {
+            path: "/logout",
+            element: <Logout />
+        }
     ]
 )
 
