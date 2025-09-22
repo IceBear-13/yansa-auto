@@ -74,19 +74,6 @@ const Header = ({ onToggle, curPage }: { onToggle?: () => void, curPage: string 
         </ul>
       </nav>
       <div className="flex">
-        <form className="hidden lg:flex ml-8 items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search cars..."
-            className="px-4 py-2 rounded-full outline-none bg-gray-200 text-base font-medium"   
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 text-base font-medium"
-          >
-            Search
-          </button>
-        </form>
         <img
           src="https://freesvg.org/img/abstract-user-flat-4.png"
           alt="Profile"

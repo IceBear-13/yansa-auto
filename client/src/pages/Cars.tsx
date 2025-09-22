@@ -2,12 +2,18 @@ import { fetchAllCars } from "../api/carApi";
 import FeaturedVehicles from "../components/Home/FeaturedVehicle";
 import VehicleSkeleton from "../components/VehicleSkeleton";
 import MainLayout from "../layout/MainLayout";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 function Cars() {
 
   const [showedCars, setShowedCars] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [priceFrom, setPriceFrom] = useState("");
+  const [priceTo, setPriceTo] = useState("");
+  const [yearFrom, setYearFrom] = useState("");
+  const [yearTo, setYearTo] = useState("");
   
 
   const sortByPriceAsc = () => {
@@ -45,24 +51,23 @@ function Cars() {
     }).format(price);
   };
 
-  const handleSearch = () => {
-    const make = (document.getElementById("make") as HTMLInputElement).value.toLowerCase() || "";
-    const model = (document.getElementById("model") as HTMLInputElement).value.toLowerCase() || "";
-    const priceFrom = parseInt((document.getElementById("price-from") as HTMLInputElement).value) || 0;
-    const priceTo = parseInt((document.getElementById("price-to") as HTMLInputElement).value) || Infinity;
-    const yearFrom = parseInt((document.getElementById("year-from") as HTMLInputElement).value) || 1900;
-    const yearTo = parseInt((document.getElementById("year-to") as HTMLInputElement).value) || new Date().getFullYear();
-
-    console.log(make, model, priceFrom, priceTo, yearFrom, yearTo);
+  const handleSearch = (event?: React.MouseEvent<HTMLButtonElement>) => {
+    if(event) event.preventDefault();
+    const makeValue = make.toLowerCase();
+    const modelValue = model.toLowerCase();
+    const priceFromValue = parseInt(priceFrom) || 0;
+    const priceToValue = parseInt(priceTo) || Infinity;
+    const yearFromValue = parseInt(yearFrom) || 1900;
+    const yearToValue = parseInt(yearTo) || new Date().getFullYear();
 
     const filteredCars = JSON.parse(localStorage.getItem("cars") || "[]").filter((car: any) => {
       return (
-        car.manufacturer.toLowerCase().includes(make) &&
-        car.model.toLowerCase().includes(model) &&
-        car.price >= priceFrom &&
-        car.price <= priceTo &&
-        car.year >= yearFrom &&
-        car.year <= yearTo
+        car.manufacturer.toLowerCase().includes(makeValue) &&
+        car.model.toLowerCase().includes(modelValue) &&
+        car.price >= priceFromValue &&
+        car.price <= priceToValue &&
+        car.year >= yearFromValue &&
+        car.year <= yearToValue
       );
     });
     setShowedCars(filteredCars);
@@ -85,91 +90,89 @@ function Cars() {
               Find your next dream car from our curated collection.
             </p>
           </div>
-          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm">
+          <form className="mb-8 rounded-lg bg-white p-6 shadow-sm">
             <div className="grid grid-cols-1 gap-x-6 gap-y-2 md:grid-cols-2 lg:grid-cols-4">
               <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="make"
-                >
-                  Make
-                </label>
+                <label htmlFor="make" className="block text-sm font-medium text-gray-700">Make</label>
                 <input
-                  className="mt-1 block w-full rounded-md border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm border hover:border-gray-300 transition duration-300"
                   id="make"
                   name="make"
                   type="text"
+                  value={make}
+                  onChange={e => setMake(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm border hover:border-gray-300 transition duration-300"
                 />
               </div>
               <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="model"
-                >
-                  Model
-                </label>
+                <label htmlFor="model" className="block text-sm font-medium text-gray-700">Model</label>
                 <input
-                  className="mt-1 block w-full rounded-md border border-gray-200 py-2 pl-2 pr-10 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300"
                   id="model"
                   name="model"
                   type="text"
+                  value={model}
+                  onChange={e => setModel(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-200 py-2 pl-2 pr-10 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300"
                 />
               </div>
               <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="price"
-                >
-                  Price Range
-                </label>
-                  <div className="mt-1 flex gap-2">
+                <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price Range</label>
+                <div className="mt-1 flex gap-2">
                   <input
-                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300 max-w-[50%]"
                     id="price-from"
                     name="priceFrom"
                     type="text"
                     placeholder="From"
+                    value={priceFrom}
+                    onChange={e => setPriceFrom(e.target.value)}
+                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300 max-w-[50%]"
                   />
                   <input
-                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300 max-w-[50%]"
                     id="price-to"
                     name="priceTo"
                     type="text"
                     placeholder="To"
+                    value={priceTo}
+                    onChange={e => setPriceTo(e.target.value)}
+                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300 max-w-[50%]"
                   />
                 </div>
               </div>
               <div>
-                <label
-                  className="block text-sm font-medium text-gray-700"
-                  htmlFor="year-from"
-                >
-                  Year Range
-                </label>
+                <label htmlFor="year-from" className="block text-sm font-medium text-gray-700">Year Range</label>
                 <div className="mt-1 flex gap-2">
                   <input
-                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300"
                     id="year-from"
                     name="yearFrom"
                     type="number"
                     placeholder="From"
                     min={1900}
                     max={new Date().getFullYear()}
+                    value={yearFrom}
+                    onChange={e => setYearFrom(e.target.value)}
+                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300"
                   />
                   <input
-                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300"
                     id="year-to"
                     name="yearTo"
                     type="number"
                     placeholder="To"
                     min={1900}
                     max={new Date().getFullYear()}
+                    value={yearTo}
+                    onChange={e => setYearTo(e.target.value)}
+                    className="flex-1 rounded-md border border-gray-200 py-2 pl-2 text-base focus:border-[var(--primary-color)] focus:outline-none focus:ring-[var(--primary-color)] sm:text-sm hover:border-gray-300 transition duration-300"
                   />
                 </div>
               </div>
-              <button type="submit" className="mt-4 w-full rounded-md py-2 bg-blue-600 text-white transition duration-300 hover:bg-blue-700" onClick={handleSearch}>Search</button>
+              <button
+                type="button"
+                className="mt-4 w-full rounded-md py-2 bg-blue-600 text-white transition duration-300 hover:bg-blue-700"
+                onClick={handleSearch}
+              >
+                Search
+              </button>
             </div>
-          </div>
+          </form>
           <div className="mb-4 flex items-center justify-between">
             <p className="text-sm text-gray-600">Showing 6 results</p>
             <div className="flex items-center gap-2">
